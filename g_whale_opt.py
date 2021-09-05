@@ -4,6 +4,7 @@ import copy # array-copying convenience
 import sys # max float
 import random
 from numpy.random import randn
+import numpy as np
 # -------fitness functions---------
 
 # rastrigin function
@@ -20,8 +21,8 @@ def fitness_sphere(position):
     fitness_value = 0.0
     for i in range(len(position)):
         xi = position[i]
-        fitness_value += (xi * xi);
-    return fitness_value;
+        fitness_value += (xi * xi)
+    return fitness_value
 
 # Other functions  - f1 to f7 mentioned in paper
 def F1(x):
@@ -29,31 +30,47 @@ def F1(x):
     return sum(x1)
 
 def F2(x):
-#     return sum(abs(x))+prod(abs(x))
     mylist = [abs(x1) for x1 in x]
     return sum(mylist) + math.prod(mylist)
 
-# def F3(x):
-#     dim=size(x,2)
-#     answer = 0
-#     for i in range(1, dim+1):
-#         answer+=sum(x[1:i])**2
-#     return answer
-
-# def F4(x):
-#     return max(abs(x))
+def F3(x):
+    dim = np.array(x).shape[0]
+    ans = 0
+    for i in range(1,dim+1):
+        ans += sum(x[1:i+1])**2
+    return ans
 
 
-# def F5(x):
-#     dim=size(x,2)
-#     return sum(100*(x(2:dim)-(x(1:dim-1).^2)).^2+(x(1:dim-1)-1).^2)
+def F4(x):
+    myList = [abs(x1) for x1 in x]
+    return max(myList)
 
-# def F6(x):
-#     return sum(abs((x+.5)).^2)
 
-# def F7(x):
-#     dim=size(x,2);
-#     return sum([1:dim].*(x.^4))+rand
+def F5(x):
+    dim = np.array(x).shape[0]
+    diff = []
+    for m,n in zip(x[1:dim], [x1**2 for x1 in x[:dim-1]]):
+        diff.append(m-n)
+    l1 = [100*(x1**2) for x1 in diff]
+    l2 = [x1-1 for x1 in x[:dim-1]]
+    l2 = [x1**2 for x1 in l2]
+    ans = [sum(i) for i in zip(l1, l2)]
+    return sum
+
+
+def F6(x):
+    myList = [abs(x1) + .5 for x1 in x]
+    myList = [x1**2 for x1 in myList]
+    return sum(myList)
+
+
+def F7(x):
+    dim = np.array(x).shape[0]
+    l1 = [x for x in range(dim)]
+    l2 = [x1**4 for x1 in x]
+    final = [m*n for m,n in zip(l1,l2)]
+    return sum(final)+random.randint(0,1)
+    
 
 
 
@@ -117,7 +134,7 @@ def woa(fitness, max_iter, n, dim, minx, maxx):
             A = 2 * a * rnd.random() - a
             C = 2 * rnd.random()
             b = 1
-            l = (a2-1)*rnd.random()+1;
+            l = (a2-1)*rnd.random()+1
             p = rnd.random()
 
             D = [0.0 for i in range(dim)]
@@ -243,7 +260,7 @@ print("-----------------------------------------")
 # driver code for function F1
 print("Whale optimization for function F1: ")
 dim = 3
-fitness = F2
+fitness = F5    # function
 
 print("Goal is to minimize sphere function in " + str(dim) + " variables")
 print("Function has known min = 0.0 at (", end="")
