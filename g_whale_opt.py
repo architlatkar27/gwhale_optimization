@@ -266,10 +266,10 @@ print("\nEnd WOA for sphere\n")
 
 print("-----------------------------------------")
 
-# driver code for function F1
-print("Whale optimization for function F1: ")
+# driver code for function F3
+print("Whale optimization for function F3: ")
 dim = 3
-fitness = F5    # function
+fitness = F3    # function
 
 print("Goal is to minimize sphere function in " + str(dim) + " variables")
 print("Function has known min = 0.0 at (", end="")
@@ -292,4 +292,4 @@ print(["%.6f" % best_position[k] for k in range(dim)])
 err = fitness(best_position)
 print("fitness of best solution = %.6f" % err)
 
-print("\nEnd WOA for F1\n")
+print("\nEnd WOA for F3\n")
