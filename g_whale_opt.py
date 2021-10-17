@@ -7,6 +7,7 @@ from numpy.random import randn
 import numpy as np
 # -------fitness functions---------
 
+mu = randn(1)
 # rastrigin function
 def fitness_rastrigin(position):
     fitness_value = 0.0
@@ -70,7 +71,7 @@ def F7(x):
     l2 = [x1**4 for x1 in x]
     final = [m*n for m,n in zip(l1,l2)]
     return sum(final)+random.randint(0,1)
-    
+
 
 
 
@@ -93,20 +94,27 @@ class whale:
 # whale optimization algorithm(WOA)
 def woa(fitness, max_iter, n, dim, minx, maxx):
     rnd = random.Random(0)
+    mu = randn(1)
 
     # create n random whales
     whalePopulation = [whale(fitness, dim, minx, maxx, i) for i in range(n)]
-    
+    # whalePopulation1 = copy.copy(whalePopulation)
     ## Gaussian perturbations
     for i in range(len(whalePopulation)):
         f1 = whalePopulation[i].fitness
         x = copy.copy(whalePopulation[i])
+        x1 = copy.copy(whalePopulation[i])
         for j in range(dim):
             x.position[j] = x.position[j] + x.position[j]*randn(1)
             x.fitness = fitness(x.position)
-            if x.fitness < f1:
+            x1.position[j] = (0.5*mu+0.5)*(minx+maxx)-mu*x.position[j]
+            x1.fitness = fitness(x1.position)
+            if x.fitness < f1 and x.fitness < x1.fitness:
                 whalePopulation[i] = x
+            elif x1.fitness < f1 and x1.fitness < x.fitness:
+                whalePopulation[i] = x1
 
+    
 
     # compute the value of best_position and best_fitness in the whale Population
     Xbest = [0.0 for i in range(dim)]
@@ -150,6 +158,7 @@ def woa(fitness, max_iter, n, dim, minx, maxx):
                     p = random.randint(0, n - 1)
                     while (p == i):
                         p = random.randint(0, n - 1)
+                    ## this section starts Golden Sine
                     r1 = random.uniform(0, 2*math.pi)
                     r2 = random.uniform(0, math.pi)
                     tau = (5**0.5-1)/2
