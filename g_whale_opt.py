@@ -35,7 +35,7 @@ def F2(x):
     return sum(mylist) + math.prod(mylist)
 
 def F3(x):
-    dim = np.array(x).shape[0]
+    dim = np.array(x, dtype=object).shape[0]
     ans = 0
     for i in range(1,dim+1):
         ans += sum(x[1:i+1])**2
